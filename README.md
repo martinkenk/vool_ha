@@ -15,15 +15,19 @@ To install the VOOL Home Assistant integration, follow these steps:
 
 ## Usage
 Once the VOOL integration is installed, you can configure it by adding it as an integration to your HA instance
-![searching for integration](img/image1.png) and then inserting the required information
+![searching for integration](img/image1.png) and 
+
+then inserting the required information
+
 ![Configuration options](img/image2.png) 
 The Wallbox and LMC device ID can be retreived by logging into your VOOL account on their webpage and navigation to the Wallbox or LMC overview page. The ID will be part of the URL https://app.vool.com/devices/{device-id}/overview. Just copy the value from there.
 
 The default polling interval is 300 sec. To get representative current data and if your HA hardware is powerful enough it should be set to a lower value (30-60 sec).
 
 Once the integration is successfully configured, you will be able to access the VOOL Wallbox and LMC `actual power`, `phase current` and `phase voltage` data and use it in your automations and scripts.
+
 ![VOOL LMC device in HA](img/image3.png)
 
 ## What next?
 You can for example create a dashboard to get an overview of your home and also EV charger energy usage and trends. 
-![Examople dashboard](img/image4.png)
+![Example dashboard](img/image4.png)
