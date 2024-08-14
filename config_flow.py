@@ -6,31 +6,33 @@ from typing import Any
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, CONF_DEVICE_ID
+from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import DOMAIN, CONF_SCAN_INTERVAL
+from .const import DOMAIN, CONF_SCAN_INTERVAL, CONF_LMC_DEVICE_ID, CONF_WALLBOX_DEVICE_ID
 from .vool_api import VoolAPI
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_EMAIL): str,
         vol.Required(CONF_PASSWORD): str,
-        vol.Required(CONF_DEVICE_ID): str,
+        vol.Required(CONF_LMC_DEVICE_ID): str,
+        vol.Required(CONF_WALLBOX_DEVICE_ID): str,
         vol.Optional(CONF_SCAN_INTERVAL, default=300): int,
     }
 )
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect."""
-    api = VoolAPI(data[CONF_EMAIL], data[CONF_PASSWORD], data[CONF_DEVICE_ID])
+    lmc_api = VoolAPI(data[CONF_EMAIL], data[CONF_PASSWORD], data[CONF_LMC_DEVICE_ID])
+    wallbox_api = VoolAPI(data[CONF_EMAIL], data[CONF_PASSWORD], data[CONF_WALLBOX_DEVICE_ID])
 
-    if not await api.authenticate():
+    if not await lmc_api.authenticate() or not await wallbox_api.authenticate():
         raise InvalidAuth
 
-    return {"title": f"Vool Device {data[CONF_DEVICE_ID]}"}
+    return {"title": f"Vool LMC {data[CONF_LMC_DEVICE_ID]} and Wallbox {data[CONF_WALLBOX_DEVICE_ID]}"}
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Vool."""

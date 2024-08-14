@@ -5,7 +5,8 @@
                 "data": {
                     "email": "VOOL account Email",
                     "password": "VOOL account Password",
-                    "device_id": "VOOL LMC Device ID",
+                    "lmc_device_id": "VOOL LMC Device ID",
+                    "wallbox_device_id": "VOOL Wallbox Device ID",
                     "scan_interval": "Scan Interval (seconds)"
                 },
                 "description": "Please enter your VOOL credentials and device information.",

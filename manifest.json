@@ -2,7 +2,7 @@
   "domain": "vool",
   "name": "Vool",
   "config_flow": true,
-  "documentation": "https://www.example.com",
+  "documentation": "https://github.com/martinkenk/vool_ha",
   "requirements": ["PyJWT"],
   "ssdp": [],
   "zeroconf": [],
@@ -10,6 +10,5 @@
   "dependencies": [],
   "codeowners": ["@martinkenk"],
   "iot_class": "cloud_polling",
-  "version": "0.1.0",
-  "icon": "icon.svg"
+  "version": "0.2.0"
 }
