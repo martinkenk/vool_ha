@@ -8,9 +8,10 @@ To install the VOOL Home Assistant integration, follow these steps:
 1. Open your Home Assistant configuration directory.
 2. If you don't have a `custom_components` directory, create one.
 3. Inside the `custom_components` directory, create a new directory called `vool`.
-4. Download all files from the [VOOL Home Assistant GitHub repository](https://github.com/martinkenk/vool_ha) into the `vool` directory.
-5. Make sure the python dependency PyJWT is installed on your HA setup.
-6. Restart Home Assistant to load the integration.
+4. Download latest release from the [VOOL Home Assistant GitHub repository](https://github.com/martinkenk/vool_ha/releases/)
+5. Unzip the contents into the `vool` directory on your HA host that was created inn step #3.
+6. Make sure the python dependency `PyJWT` is installed on your HA setup.
+7. Restart Home Assistant to load the integration.
 
 ## Usage
 Once the VOOL integration is installed, you can configure it by adding it as an integration to your HA instance
