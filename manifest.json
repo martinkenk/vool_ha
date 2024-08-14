@@ -1,0 +1,15 @@
+{
+  "domain": "vool",
+  "name": "Vool",
+  "config_flow": true,
+  "documentation": "https://www.example.com",
+  "requirements": ["PyJWT"],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": ["@martinkenk"],
+  "iot_class": "cloud_polling",
+  "version": "0.1.0",
+  "icon": "icon.svg"
+}
