@@ -1,12 +1,13 @@
 """Sensor platform for Vool integration."""
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.const import UnitOfPower
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.const import (
-    POWER_WATT,
-    ELECTRIC_CURRENT_AMPERE,
-    ELECTRIC_POTENTIAL_VOLT,
+    UnitOfPower,
+    UnitOfElectricCurrent,
+    UnitOfElectricPotential,
 )
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -23,13 +24,13 @@ async def async_setup_entry(
     entities = []
     for device_type in ['lmc', 'wallbox']:
         entities.extend([
-            VoolPowerSensor(coordinator, device_type, "active_power", "Active Power", POWER_WATT, True),
-            VoolPowerSensor(coordinator, device_type, "current_l1", "Current L1", ELECTRIC_CURRENT_AMPERE),
-            VoolPowerSensor(coordinator, device_type, "current_l2", "Current L2", ELECTRIC_CURRENT_AMPERE),
-            VoolPowerSensor(coordinator, device_type, "current_l3", "Current L3", ELECTRIC_CURRENT_AMPERE),
-            VoolPowerSensor(coordinator, device_type, "voltage_l1", "Voltage L1", ELECTRIC_POTENTIAL_VOLT),
-            VoolPowerSensor(coordinator, device_type, "voltage_l2", "Voltage L2", ELECTRIC_POTENTIAL_VOLT),
-            VoolPowerSensor(coordinator, device_type, "voltage_l3", "Voltage L3", ELECTRIC_POTENTIAL_VOLT),
+            VoolPowerSensor(coordinator, device_type, "active_power", "Active Power", UnitOfPower.WATT, True),
+            VoolPowerSensor(coordinator, device_type, "current_l1", "Current L1", UnitOfElectricCurrent.AMPERE),
+            VoolPowerSensor(coordinator, device_type, "current_l2", "Current L2", UnitOfElectricCurrent.AMPERE),
+            VoolPowerSensor(coordinator, device_type, "current_l3", "Current L3", UnitOfElectricCurrent.AMPERE),
+            VoolPowerSensor(coordinator, device_type, "voltage_l1", "Voltage L1", UnitOfElectricPotential.VOLT),
+            VoolPowerSensor(coordinator, device_type, "voltage_l2", "Voltage L2", UnitOfElectricPotential.VOLT),
+            VoolPowerSensor(coordinator, device_type, "voltage_l3", "Voltage L3", UnitOfElectricPotential.VOLT),
         ])
 
     async_add_entities(entities)
