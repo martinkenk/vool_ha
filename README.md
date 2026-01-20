@@ -1,33 +1,88 @@
-# VOOL Home Assistant integration
+# VOOL Home Assistant Integration
 
-This integration hooks to your [VOOL](https://www.vool.com/) [EV charger Wallbox](https://www.vool.com/products/vool-charger/) and Load Management Controller ([LMC](https://www.vool.com/products/vool-lmc/)) data and records usage of all power phases and total power. That info can then be used in automations etc.
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![GitHub Release](https://img.shields.io/github/release/martinkenk/vool_ha.svg)](https://github.com/martinkenk/vool_ha/releases)
+[![License](https://img.shields.io/github/license/martinkenk/vool_ha.svg)](LICENSE)
+
+A Home Assistant custom integration for [VOOL](https://www.vool.com/) [EV charger Wallbox](https://www.vool.com/products/vool-charger/) and Load Management Controller ([LMC](https://www.vool.com/products/vool-lmc/)) via Cloud API.
+
+## Features
+
+- **Real-time monitoring**: Power (kW), current (A), voltage (V) per phase
+- **Multi-device support**: Both VOOL Charger (Wallbox) and LMC devices
+- **Energy Dashboard compatible**: Proper sensor device classes and state classes
+- **Cloud-based**: Uses VOOL Cloud API for data retrieval
 
 ## Installation
-To install the VOOL Home Assistant integration, follow these steps:
 
-1. Open your Home Assistant configuration directory.
-2. If you don't have a `custom_components` directory, create one.
-3. Inside the `custom_components` directory, create a new directory called `vool`.
-4. Download latest release from the [VOOL Home Assistant GitHub repository](https://github.com/martinkenk/vool_ha/releases/)
-5. Unzip the contents into the `vool` directory on your HA host that was created inn step #3.
-6. Make sure the python dependency `PyJWT` is installed on your HA setup.
-7. Restart Home Assistant to load the integration.
+### HACS (Recommended)
 
-## Usage
-Once the VOOL integration is installed, you can configure it by adding it as an integration to your HA instance
-![searching for integration](img/image1.png) 
+1. Ensure you have [HACS](https://hacs.xyz/) installed
+2. Go to HACS → Integrations → ⋮ (menu) → Custom repositories
+3. Add this repository URL: `https://github.com/martinkenk/vool_ha`
+4. Select category: **Integration**
+5. Click **Add**
+6. Search for "VOOL" in HACS and install it
+7. Restart Home Assistant
 
-and then inserting the required information
+### Manual Installation
 
-![Configuration options](img/image2.png) 
-The Wallbox and LMC device ID can be retreived by logging into your VOOL account on their webpage and navigation to the Wallbox or LMC overview page. The ID will be part of the URL https://app.vool.com/devices/{device-id}/overview. Just copy the value from there.
+1. Download the latest release from the [releases page](https://github.com/martinkenk/vool_ha/releases)
+2. Extract the `custom_components/vool` folder to your Home Assistant `config/custom_components/` directory
+3. Restart Home Assistant
 
-The default polling interval is 300 sec. To get representative current data and if your HA hardware is powerful enough it should be set to a lower value (30-60 sec).
+## Configuration
 
-Once the integration is successfully configured, you will be able to access the VOOL Wallbox and LMC `actual power`, `phase current` and `phase voltage` data and use it in your automations and scripts.
+1. Go to **Settings** → **Devices & Services**
+2. Click **+ Add Integration**
+3. Search for "VOOL"
+4. Enter your credentials:
+   - **Email**: Your VOOL account email
+   - **Password**: Your VOOL account password  
+   - **LMC Device ID**: Your LMC device ID
+   - **Wallbox Device ID**: Your Wallbox device ID
+   - **Scan Interval**: Polling interval in seconds (default: 300)
 
-![VOOL LMC device in HA](img/image3.png)
+### Finding Device IDs
 
-## What next?
-You can for example create a dashboard to get an overview of your home and also EV charger energy usage and trends. 
-![Example dashboard](img/image4.png)
+Device IDs can be found by logging into your VOOL account at [app.vool.com](https://app.vool.com) and navigating to the device overview page. The ID is part of the URL: `https://app.vool.com/devices/{device-id}/overview`
+
+## Entities
+
+### Sensors
+
+| Entity | Description | Unit |
+|--------|-------------|------|
+| Active Power | Current power consumption | kW |
+| Current L1/L2/L3 | Per-phase current | A |
+| Voltage L1/L2/L3 | Per-phase voltage | V |
+
+## Example Dashboard
+
+You can create a dashboard to monitor your home and EV charger energy usage:
+
+![Example dashboard](custom_components/vool/img/image4.png)
+
+## Troubleshooting
+
+### Cannot connect to VOOL API
+- Verify your email and password are correct
+- Check your internet connection
+- Ensure the VOOL API is accessible
+
+### Values not updating
+- Check the scan interval setting
+- Verify your device IDs are correct
+- Check the Home Assistant logs for errors
+
+## Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Disclaimer
+
+This integration is not officially affiliated with VOOL. Use at your own risk.
