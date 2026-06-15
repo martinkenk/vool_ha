@@ -18,21 +18,29 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_EMAIL): str,
         vol.Required(CONF_PASSWORD): str,
-        vol.Required(CONF_LMC_DEVICE_ID): str,
         vol.Required(CONF_WALLBOX_DEVICE_ID): str,
+        vol.Optional(CONF_LMC_DEVICE_ID): str,
         vol.Optional(CONF_SCAN_INTERVAL, default=300): int,
     }
 )
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect."""
-    lmc_api = VoolAPI(data[CONF_EMAIL], data[CONF_PASSWORD], data[CONF_LMC_DEVICE_ID])
     wallbox_api = VoolAPI(data[CONF_EMAIL], data[CONF_PASSWORD], data[CONF_WALLBOX_DEVICE_ID])
 
-    if not await lmc_api.authenticate() or not await wallbox_api.authenticate():
+    if not await wallbox_api.authenticate():
         raise InvalidAuth
 
-    return {"title": f"Vool LMC {data[CONF_LMC_DEVICE_ID]} and Wallbox {data[CONF_WALLBOX_DEVICE_ID]}"}
+    lmc_device_id = data.get(CONF_LMC_DEVICE_ID)
+    if lmc_device_id:
+        lmc_api = VoolAPI(data[CONF_EMAIL], data[CONF_PASSWORD], lmc_device_id)
+        if not await lmc_api.authenticate():
+            raise InvalidAuth
+        return {
+            "title": f"Vool LMC {lmc_device_id} and Wallbox {data[CONF_WALLBOX_DEVICE_ID]}"
+        }
+
+    return {"title": f"Vool Wallbox {data[CONF_WALLBOX_DEVICE_ID]}"}
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Vool."""
