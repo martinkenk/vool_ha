@@ -108,8 +108,13 @@ async def async_setup_entry(
     """Set up the Vool sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
 
+    device_types = ['wallbox']
+    # Only add LMC sensors if an LMC device is configured
+    if coordinator.lmc_api is not None:
+        device_types.append('lmc')
+
     entities = []
-    for device_type in ['lmc', 'wallbox']:
+    for device_type in device_types:
         for description in SENSOR_DESCRIPTIONS:
             entities.append(VoolSensor(coordinator, device_type, description))
 

@@ -16,7 +16,12 @@ class VoolCoordinator(DataUpdateCoordinator):
 
     def __init__(self, hass: HomeAssistant, entry):
         """Initialize."""
-        self.lmc_api = VoolAPI(entry.data["email"], entry.data["password"], entry.data[CONF_LMC_DEVICE_ID])
+        lmc_device_id = entry.data.get(CONF_LMC_DEVICE_ID)
+        self.lmc_api = (
+            VoolAPI(entry.data["email"], entry.data["password"], lmc_device_id)
+            if lmc_device_id
+            else None
+        )
         self.wallbox_api = VoolAPI(entry.data["email"], entry.data["password"], entry.data[CONF_WALLBOX_DEVICE_ID])
         
         super().__init__(
@@ -29,12 +34,15 @@ class VoolCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Fetch data from Vool."""
         try:
-            lmc_data = await self.lmc_api.get_device_status()
             wallbox_data = await self.wallbox_api.get_device_status()
-            
-            # Ensure the device ID is included in the data structure
-            if lmc_data and 'deviceStatus' in lmc_data:
-                lmc_data['deviceStatus']['deviceId'] = self.lmc_api.device_id
+
+            lmc_data = None
+            if self.lmc_api is not None:
+                lmc_data = await self.lmc_api.get_device_status()
+                # Ensure the device ID is included in the data structure
+                if lmc_data and 'deviceStatus' in lmc_data:
+                    lmc_data['deviceStatus']['deviceId'] = self.lmc_api.device_id
+
             if wallbox_data and 'deviceStatus' in wallbox_data:
                 wallbox_data['deviceStatus']['deviceId'] = self.wallbox_api.device_id
             
