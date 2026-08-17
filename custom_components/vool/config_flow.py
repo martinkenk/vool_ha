@@ -4,14 +4,18 @@ from __future__ import annotations
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant import config_entries
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import DOMAIN, CONF_SCAN_INTERVAL, CONF_LMC_DEVICE_ID, CONF_WALLBOX_DEVICE_ID
+from .const import (
+    CONF_LMC_DEVICE_ID,
+    CONF_SCAN_INTERVAL,
+    CONF_WALLBOX_DEVICE_ID,
+    DOMAIN,
+)
 from .vool_api import VoolAPI
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
@@ -64,7 +68,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors["base"] = "cannot_connect"
         except InvalidAuth:
             errors["base"] = "invalid_auth"
-        except Exception:  # pylint: disable=broad-except
+        except Exception:  # noqa: BLE001 - config flow must never raise, show "unknown" instead
             errors["base"] = "unknown"
         else:
             return self.async_create_entry(title=info["title"], data=user_input)

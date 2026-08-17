@@ -1,13 +1,18 @@
 """DataUpdateCoordinator for Vool integration."""
-from datetime import timedelta
 import logging
+from datetime import timedelta
 
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DOMAIN, CONF_SCAN_INTERVAL, CONF_LMC_DEVICE_ID, CONF_WALLBOX_DEVICE_ID
-from .vool_api import VoolAPI, InvalidAuth
+from .const import (
+    CONF_LMC_DEVICE_ID,
+    CONF_SCAN_INTERVAL,
+    CONF_WALLBOX_DEVICE_ID,
+    DOMAIN,
+)
+from .vool_api import InvalidAuth, VoolAPI
 
 _LOGGER = logging.getLogger(__name__)
 

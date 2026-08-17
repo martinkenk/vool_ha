@@ -1,8 +1,9 @@
 """Sensor platform for Vool integration."""
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -10,15 +11,15 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    UnitOfPower,
     UnitOfElectricCurrent,
     UnitOfElectricPotential,
+    UnitOfPower,
 )
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
@@ -157,7 +158,16 @@ class VoolSensor(CoordinatorEntity, SensorEntity):
             try:
                 connectors = self.coordinator.data[self._device_type]['deviceStatus']['connectors']
                 if connectors and self.entity_description.value_fn:
-                    value = self.entity_description.value_fn(connectors[0])
+                    connector = connectors[0]
+                    # VOOL does not report a live active_power reading for LMC devices (always a
+                    # fixed placeholder value), so approximate it from the per-phase V*I instead.
+                    if self.entity_description.key == 'active_power' and self._device_type == 'lmc':
+                        total_w = sum(
+                            connector.get(f'voltage_l{p}', 0) * connector.get(f'current_l{p}', 0)
+                            for p in (1, 2, 3)
+                        )
+                        return round(total_w / 1000, 3)
+                    value = self.entity_description.value_fn(connector)
                     return value
             except (KeyError, TypeError, IndexError):
                 pass
