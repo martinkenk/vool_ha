@@ -1,11 +1,11 @@
 {
   "domain": "vool",
   "name": "VOOL",
+  "codeowners": ["@martinkenk"],
   "config_flow": true,
   "documentation": "https://github.com/martinkenk/vool_ha",
+  "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/martinkenk/vool_ha/issues",
   "requirements": ["PyJWT>=2.0.0"],
-  "codeowners": ["@martinkenk"],
-  "iot_class": "cloud_polling",
   "version": "1.0.1"
 }

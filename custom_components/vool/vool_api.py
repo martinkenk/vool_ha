@@ -1,8 +1,9 @@
 """API client for Vool integration."""
 import logging
+import time
+
 import aiohttp
 import jwt
-import time
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,15 +32,17 @@ class VoolAPI:
         }
         headers = {'Content-Type': 'application/json'}
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    self.token = data.get('token')
-                    return self.token
-                else:
-                    _LOGGER.error("Failed to get auth token. Status: %s", response.status)
-                    return None
+        async with (
+            aiohttp.ClientSession() as session,
+            session.post(url, headers=headers, json=payload) as response,
+        ):
+            if response.status == 200:
+                data = await response.json()
+                self.token = data.get('token')
+                return self.token
+            else:
+                _LOGGER.error("Failed to get auth token. Status: %s", response.status)
+                return None
 
     def is_token_expired(self):
         """Check if the token is expired."""
